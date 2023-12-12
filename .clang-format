@@ -1,0 +1,22 @@
+# config tool: https://zed0.co.uk/clang-format-configurator/
+
+# Common settings
+BasedOnStyle: Microsoft
+TabWidth: 4
+IndentWidth: 4
+UseTab: Never
+ColumnLimit: 125
+
+AccessModifierOffset: -4
+IndentExternBlock: NoIndent
+IncludeBlocks: Regroup
+
+IncludeCategories:
+    - Regex: '^<ext/.*\.h>'
+      Priority: 2
+    - Regex: '^<.*\.h>'
+      Priority: 1
+    - Regex: "^<.*"
+      Priority: 2
+    - Regex: ".*"
+      Priority: 3

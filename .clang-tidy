@@ -1,0 +1,13 @@
+Checks: "*,
+    cppcoreguidelines-*,
+    modernize-*,
+    misc-*,
+    bugprone-*,
+    -llvmlibc-*
+    -cppcoreguidelines-owning-memory,
+    -modernize-use-trailing-return-type,
+    -fuchsia-default-arguments-calls,
+    -altera-struct-pack-align,
+    -fuchsia-overloaded-operator,
+    -fuchsia-default-arguments-declarations,
+    -llvm-include-order"
