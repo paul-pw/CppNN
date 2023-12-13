@@ -59,3 +59,38 @@ Moving/renaming paths such as the `mnist-datasets/` directory or modifying its c
 Obviously, you can easily revert to an earlier project state via `git revert` in case you break something by accident.
 
 Good luck!
+
+
+## Architecture
+
+* lib/tensor
+    * /tests/
+    * /src/
+        * matvec.hpp
+        * tensor.hpp
+        * io.cpp
+        * io.hpp
+    * CMakeLists.txt
+    * NOTE: Alternatively IO could also be separated out into a lib/tensorIO
+* lib/NN
+    * /tests/
+    * /src/
+        * /layers/
+        * /optimizers/
+        * NN.hpp
+        * NN.cpp
+    * CMakeLists.txt
+* src/
+    * CMakeLists.txt
+    * /io/
+        * main.cpp
+        * Simple IO main, that is used to test the results using CI
+    * /mnist/
+        * main.cpp
+        * Simple Programm to train the Network on the Mnist data and give out the results.
+  
+### Testing
+
+Using Gtest
+
+TODO integrate in CI pipeline
