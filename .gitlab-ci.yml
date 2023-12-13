@@ -3,7 +3,6 @@ stages:
 #  - unit tests
   - test io
   - test mnist
-  - test
 
 default:
   image: i10git.cs.fau.de:5005/walberla/buildenvs/gcc:11
@@ -35,7 +34,7 @@ default:
   - python3 compare_files.py log_predictions-ci.txt expected-results/out-prediction-log-single-image.txt
 
 .build_template:
-  stage: test
+  stage: build
   script:
     - export
     - $CXX --version
