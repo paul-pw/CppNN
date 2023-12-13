@@ -1,1 +1,2 @@
-echo "This script should trigger the training and testing of your neural network implementation..."
+echo "running mnist.sh"
+./build/Release/src/mnist_nn $1

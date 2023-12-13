@@ -1,1 +1,2 @@
-echo "This script should build your project now..."
+cmake -DCMAKE_BUILD_TYPE=Release -S . -B build/Release
+cmake --build build/Release

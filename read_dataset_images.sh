@@ -1,1 +1,3 @@
-echo "This script should read a dataset image into a tensor and pretty-print it into a text file..."
+echo "running read_dataset_images.sh"
+./build/Release/src/mnist_io $1 $2 $3
+

@@ -1,1 +1,2 @@
-echo "This script should read a dataset label into a tensor and pretty-print it into a text file..."
+echo "running read_datase_labels"
+./build/Release/src/mnist_io $1 $2 $3
