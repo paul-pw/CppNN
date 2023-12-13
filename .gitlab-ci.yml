@@ -1,26 +1,62 @@
 stages:
-  - test
+  - build
+#  - unit tests
+  - test io
+  - test mnist
+
+default:
+  image: i10git.cs.fau.de:5005/walberla/buildenvs/gcc:11
+  tags:
+    - docker
+  before_script:
+    - export
+    - $CXX --version
+    - cmake --version
+    - ccache --version
+
 
 # test dataset image reader by checking generated outputs with expected results
-.read_dataset_images: &read_dataset_images
-  - chmod +x read_dataset_images.sh
-  - bash read_dataset_images.sh mnist-datasets/train-images.idx3-ubyte image_out.txt 0
-  - python3 compare_files.py image_out.txt expected-results/out-tensor-single-image.txt
+#.read_dataset_images: &read_dataset_images
+#  - chmod +x read_dataset_images.sh
+#  - bash read_dataset_images.sh mnist-datasets/train-images.idx3-ubyte image_out.txt 0
+#  - python3 compare_files.py image_out.txt expected-results/out-tensor-single-image.txt
 
 # test dataset label reader by checking generated outputs with expected results
-.read_dataset_labels: &read_dataset_labels
-  - chmod +x read_dataset_labels.sh
-  - bash read_dataset_labels.sh mnist-datasets/train-labels.idx1-ubyte label_out.txt 0
-  - python3 compare_files.py label_out.txt expected-results/out-tensor-single-label.txt
+#.read_dataset_labels: &read_dataset_labels
+#  - chmod +x read_dataset_labels.sh
+#  - bash read_dataset_labels.sh mnist-datasets/train-labels.idx1-ubyte label_out.txt 0
+#  - python3 compare_files.py label_out.txt expected-results/out-tensor-single-label.txt
 
-# train and test neural network with MNIST dataset
-.mnist_single_image: &mnist_single_image
-  - chmod +x mnist.sh
-  - bash mnist.sh mnist-configs/input-ci.config
-  - python3 compare_files.py log_predictions-ci.txt expected-results/out-prediction-log-single-image.txt
+## train and test neural network with MNIST dataset
+#.mnist_single_image: &mnist_single_image
+#  - chmod +x mnist.sh
+#  - bash mnist.sh mnist-configs/input-ci.config
+#  - python3 compare_files.py log_predictions-ci.txt expected-results/out-prediction-log-single-image.txt
 
-.build_template:
-  stage: test
+#.build_template:
+#  stage: test
+#  script:
+#    - export
+#    - $CXX --version
+#    - cmake --version
+#    - ccache --version
+#    - chmod +x build.sh
+#    - bash build.sh
+#    - *read_dataset_images
+#    - *read_dataset_labels
+#    - *mnist_single_image
+#  allow_failure: true
+#  tags:
+#    - docker
+
+#gcc_11_serial:
+#  extends: .build_template
+#  image: i10git.cs.fau.de:5005/walberla/buildenvs/gcc:11
+#  tags:
+#    - docker
+
+build:
+  stage: build
   script:
     - export
     - $CXX --version
@@ -28,17 +64,35 @@ stages:
     - ccache --version
     - chmod +x build.sh
     - bash build.sh
-    - *read_dataset_images
-    - *read_dataset_labels
-    - *mnist_single_image
-  allow_failure: true
-  tags:
-    - docker
 
-gcc_11_serial:
-  extends: .build_template
-  image: i10git.cs.fau.de:5005/walberla/buildenvs/gcc:11
-  tags:
-    - docker
+test_mnist:
+  stage: test mnist
+  script:
+      - chmod +x mnist.sh
+      - bash mnist.sh mnist-configs/input-ci.config
+      - python3 compare_files.py log_predictions-ci.txt expected-results/out-prediction-log-single-image.txt
+  needs:
+    - build
+    - read_dataset_labels
+    - read_dataset_images
+
+read_dataset_labels:
+  stage: test io
+  script:
+      - chmod +x read_dataset_labels.sh
+      - bash read_dataset_labels.sh mnist-datasets/train-labels.idx1-ubyte label_out.txt 0
+      - python3 compare_files.py label_out.txt expected-results/out-tensor-single-label.txt
+  needs:
+    - build
+
+read_dataset_images: 
+  stage: test io
+  script:
+    - chmod +x read_dataset_images.sh
+    - bash read_dataset_images.sh mnist-datasets/train-images.idx3-ubyte image_out.txt 0
+    - python3 compare_files.py image_out.txt expected-results/out-tensor-single-image.txt
+  needs:
+    - build
+
 
 
