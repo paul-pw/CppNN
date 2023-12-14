@@ -10,7 +10,8 @@
 #include <fstream>
 #include <sstream>
 
-inline constexpr size_t flatIdx(const std::vector< size_t >& shape, const std::vector< size_t >& idx)
+// can not be constexpr since std::vector::size seemingly is not constexpr compatible in gcc11
+inline /*constexpr*/ size_t flatIdx(const std::vector< size_t >& shape, const std::vector< size_t >& idx)
 {
     assert(shape.size() == idx.size());
 
