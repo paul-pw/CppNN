@@ -111,6 +111,11 @@ unit_tests:
     - ./build/Release/lib/NN/NN_test --gtest_output="xml:NN_report.xml"
   artifacts:
     when: always
+    paths:
+      - tensor_report.xml
+      - NN_report.xml
     reports:
-      junit: report.xml
+      junit: 
+        - tensor_report.xml
+        - NN_report.xml
 
