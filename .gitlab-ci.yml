@@ -109,6 +109,9 @@ unit_tests:
   script:
     - ./build/Release/lib/tensor/tensor_test --gtest_output="xml:tensor_report.xml"
     - ./build/Release/lib/NN/NN_test --gtest_output="xml:NN_report.xml"
+  needs:
+    - job: build
+      artifacts: true
   artifacts:
     when: always
     paths:
