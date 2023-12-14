@@ -1,6 +1,6 @@
 stages:
   - build
-#  - unit tests
+  - unit tests
   - test io
   - test mnist
 
@@ -105,7 +105,7 @@ read_dataset_images:
       artifacts: true
 
 unit_tests:
-  stage: test io
+  stage: unit tests
   script:
     - ./build/Release/lib/tensor/tensor_test --gtest_output="xml:tensor_report.xml"
     - ./build/Release/lib/NN/NN_test --gtest_output="xml:NN_report.xml"
