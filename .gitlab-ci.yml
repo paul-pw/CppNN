@@ -66,6 +66,11 @@ build:
     - ccache --version
     - chmod +x build.sh
     - bash build.sh
+  artifacts:
+    paths:
+      - build/
+    when: on_success
+    expire_in: 2 days
 
 test_mnist:
   stage: test mnist
@@ -74,7 +79,8 @@ test_mnist:
       - bash mnist.sh mnist-configs/input-ci.config
       - python3 compare_files.py log_predictions-ci.txt expected-results/out-prediction-log-single-image.txt
   needs:
-    - build
+    - job: build
+      artifacts: true
     - read_dataset_labels
     - read_dataset_images
 
@@ -85,7 +91,8 @@ read_dataset_labels:
       - bash read_dataset_labels.sh mnist-datasets/train-labels.idx1-ubyte label_out.txt 0
       - python3 compare_files.py label_out.txt expected-results/out-tensor-single-label.txt
   needs:
-    - build
+    - job: build
+      artifacts: true
 
 read_dataset_images: 
   stage: test io
@@ -94,7 +101,16 @@ read_dataset_images:
     - bash read_dataset_images.sh mnist-datasets/train-images.idx3-ubyte image_out.txt 0
     - python3 compare_files.py image_out.txt expected-results/out-tensor-single-image.txt
   needs:
-    - build
+    - job: build
+      artifacts: true
 
-
+unit_tests:
+  stage: test io
+  script:
+    - ./build/Release/lib/tensor/tensor_test --gtest_output="xml:tensor_report.xml"
+    - ./build/Release/lib/NN/NN_test --gtest_output="xml:NN_report.xml"
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
 
