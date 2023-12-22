@@ -116,6 +116,11 @@ public:
     ComponentType&
     operator()(const std::vector< size_t >& idx);
 
+    // Element mutation function
+    ComponentType&
+    operator()(const size_t& idx);
+
+
 private:
 
     std::vector< size_t > shape_;
@@ -205,6 +210,15 @@ Tensor< ComponentType >::operator()(const std::vector< size_t >& idx)
     assert(idx.size() == rank());
     return data_[flatIdx(shape_, idx)];
 }
+
+template< Arithmetic ComponentType >
+ComponentType&
+Tensor< ComponentType >::operator()(const size_t& idx)
+{
+    assert(data_.size() > idx);
+    return data_[idx];
+}
+
 
 
 // Returns true if the shapes and all elements of both tensors are equal.
