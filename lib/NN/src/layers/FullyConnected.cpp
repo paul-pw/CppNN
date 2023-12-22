@@ -4,6 +4,7 @@
 #include <random>
 
 #include "../helpers.hpp"
+#include "matvec.hpp"
 
 FullyConnected::FullyConnected(std::size_t input_size, std::size_t output_size, std::mt19937 &generator)
 {
@@ -18,7 +19,6 @@ void FullyConnected::set_optimizer(std::unique_ptr<Optimizer> opt)
 Tensor<double> FullyConnected::forward(Tensor<double> input_tensor)
 {
     m_input_tensor = input_tensor;
-
 }
 Tensor<double> FullyConnected::backward(Tensor<double> error_tensor)
 {

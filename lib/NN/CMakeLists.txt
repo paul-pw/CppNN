@@ -7,5 +7,6 @@ target_compile_features(NN PUBLIC cxx_std_20 )
 file(GLOB test_src tests/*)
 add_executable(NN_test ${test_src})
 target_link_libraries(NN_test GTest::gtest_main)
+target_link_libraries(NN_test NN)
 gtest_discover_tests(NN_test)
 
