@@ -37,7 +37,7 @@ TEST(helpers, dot)
     a(1, 1) = 5;
     b(1, 2) = 4;
     auto c = dot(a, b);
-    //std::cout << a.tensor() << '\n' << b.tensor() << '\n' << c.tensor();
+    std::cout << a.tensor() << '\n' << b.tensor() << '\n' << c.tensor();
     EXPECT_EQ(c(0, 0), 18);
     EXPECT_EQ(c(0, 2), 20);
     EXPECT_EQ(c(1, 0), 27);

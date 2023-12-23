@@ -1,20 +1,24 @@
 #pragma once
 
+#include <random>
+
 #include "../optimizers/Optimizer.hpp"
 #include "BaseLayer.hpp"
+#include "matvec.hpp"
 #include "tensor.hpp"
 
 class FullyConnected : BaseLayer
 {
 public:
-    FullyConnected(std::size_t input_size, std::size_t output_size);
-    Tensor<double> forward(Tensor<double> input_tensor) override;
-    Tensor<double> backward(Tensor<double> error_tensor) override;
+    FullyConnected(std::size_t input_size, std::size_t output_size, std::mt19937 &generator);
+    Tensor<double> forward(const Matrix<double> &input_tensor) override;
+    Tensor<double> backward(const Matrix<double> &error_tensor) override;
     void set_optimizer(std::unique_ptr<Optimizer> opt) override;
-    ~FullyConnected() override = default;
+    ~FullyConnected() override;
+
 private:
-    Tensor<double> m_weights;
-    Tensor<double> m_bias;
+    Matrix<double> m_weights;
+    Vector<double> m_bias;
     std::unique_ptr<Optimizer> m_optimizer;
-    Tensor<double> m_input_tensor;
+    Matrix<double> m_input_tensor;
 };

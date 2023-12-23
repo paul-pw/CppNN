@@ -1,17 +1,17 @@
 #pragma once
 
 #include <cassert>
+#include <fstream>
 #include <iostream>
 #include <memory>
-#include <stdexcept>
-#include <vector>
-#include <utility>
-
-#include <fstream>
 #include <sstream>
+#include <stdexcept>
+#include <utility>
+#include <vector>
 
 // can not be constexpr since std::vector::size seemingly is not constexpr compatible in gcc11
-inline /*constexpr*/ size_t flatIdx(const std::vector< size_t >& shape, const std::vector< size_t >& idx)
+inline /*constexpr*/ size_t flatIdx(const std::vector<size_t> &shape,
+                                    const std::vector<size_t> &idx)
 {
     assert(shape.size() == idx.size());
 
@@ -46,7 +46,7 @@ inline /*constexpr*/ size_t flatIdx(const std::vector< size_t >& shape, const st
     }
 }
 
-inline size_t numTensorElements(const std::vector< size_t >& shape)
+inline size_t numTensorElements(const std::vector<size_t> &shape)
 {
     size_t size = 1;
     for (auto d : shape)
@@ -56,8 +56,7 @@ inline size_t numTensorElements(const std::vector< size_t >& shape)
     return size;
 }
 
-template< typename ScalarType >
-ScalarType stringToScalar(const std::string& str)
+template <typename ScalarType> ScalarType stringToScalar(const std::string &str)
 {
     std::stringstream s(str);
     ScalarType scalar;
@@ -65,36 +64,32 @@ ScalarType stringToScalar(const std::string& str)
     return scalar;
 }
 
+template <class T>
+concept Arithmetic = std::is_arithmetic_v<T>;
 
-template< class T >
-concept Arithmetic = std::is_arithmetic_v< T >;
-
-template< Arithmetic ComponentType >
-class Tensor
+template <Arithmetic ComponentType> class Tensor
 {
 public:
     // Constructs a tensor with rank = 0 and zero-initializes the element.
     Tensor();
 
     // Constructs a tensor with arbitrary shape and zero-initializes all elements.
-    Tensor(const std::vector< size_t >& shape);
+    Tensor(const std::vector<size_t> &shape);
 
     // Constructs a tensor with arbitrary shape and fills it with the specified value.
-    explicit Tensor(const std::vector< size_t >& shape, const ComponentType& fillValue);
+    explicit Tensor(const std::vector<size_t> &shape, const ComponentType &fillValue);
 
     // Copy-constructor.
-    Tensor(const Tensor< ComponentType >& other);
+    Tensor(const Tensor<ComponentType> &other);
 
     // Move-constructor.
-    Tensor(Tensor< ComponentType >&& other) noexcept;
+    Tensor(Tensor<ComponentType> &&other) noexcept;
 
     // Copy-assignment
-    Tensor&
-    operator=(const Tensor< ComponentType >& other);
+    Tensor &operator=(const Tensor<ComponentType> &other);
 
     // Move-assignment
-    Tensor&
-    operator=(Tensor< ComponentType >&& other) noexcept;
+    Tensor &operator=(Tensor<ComponentType> &&other) noexcept;
 
     // Destructor
     ~Tensor() = default;
@@ -103,127 +98,107 @@ public:
     [[nodiscard]] size_t rank() const;
 
     // Returns the shape of the tensor.
-    [[nodiscard]] std::vector< size_t > shape() const;
+    [[nodiscard]] std::vector<size_t> shape() const;
 
     // Returns the number of elements of this tensor.
     [[nodiscard]] size_t numElements() const;
 
     // Element access function
-    const ComponentType&
-    operator()(const std::vector< size_t >& idx) const;
+    const ComponentType &operator()(const std::vector<size_t> &idx) const;
 
     // Element mutation function
-    ComponentType&
-    operator()(const std::vector< size_t >& idx);
+    ComponentType &operator()(const std::vector<size_t> &idx);
 
     // Element mutation function
-    ComponentType&
-    operator()(const size_t& idx);
-
+    ComponentType &operator()(const size_t &idx);
 
 private:
-
-    std::vector< size_t > shape_;
-    std::vector< ComponentType > data_;
-
+    std::vector<size_t> shape_;
+    std::vector<ComponentType> data_;
 };
 
-
-template< Arithmetic ComponentType >
-Tensor< ComponentType >::Tensor()
-    : shape_(0), data_(1, 0)
+template <Arithmetic ComponentType> Tensor<ComponentType>::Tensor() : shape_(0), data_(1, 0)
 {
 }
 
-template< Arithmetic ComponentType >
-Tensor< ComponentType >::Tensor(const std::vector< size_t >& shape)
+template <Arithmetic ComponentType>
+Tensor<ComponentType>::Tensor(const std::vector<size_t> &shape)
     : shape_(shape), data_(numTensorElements(shape), 0)
 {
 }
 
-template< Arithmetic ComponentType >
-Tensor< ComponentType >::Tensor(const std::vector< size_t >& shape, const ComponentType& fillValue)
+template <Arithmetic ComponentType>
+Tensor<ComponentType>::Tensor(const std::vector<size_t> &shape, const ComponentType &fillValue)
     : shape_(shape), data_(numTensorElements(shape), fillValue)
 {
 }
 
 // Copy-assignment
-template< Arithmetic ComponentType >
-Tensor< ComponentType >::Tensor(const Tensor< ComponentType >& other) = default;
-
+template <Arithmetic ComponentType>
+Tensor<ComponentType>::Tensor(const Tensor<ComponentType> &other) = default;
 
 // Move-constructor.
-template< Arithmetic ComponentType >
-Tensor< ComponentType >::Tensor(Tensor< ComponentType >&& other) noexcept
-    : shape_(std::exchange(other.shape_, std::vector< size_t >())), data_(std::exchange(other.data_, {0}))
+template <Arithmetic ComponentType>
+Tensor<ComponentType>::Tensor(Tensor<ComponentType> &&other) noexcept
+    : shape_(std::exchange(other.shape_, std::vector<size_t>())),
+      data_(std::exchange(other.data_, {0}))
 {
 }
 
 // Copy-assignment
-template< Arithmetic ComponentType >
-Tensor< ComponentType >& Tensor< ComponentType >::operator=(const Tensor< ComponentType >& other) = default;
-
+template <Arithmetic ComponentType>
+Tensor<ComponentType> &Tensor<ComponentType>::operator=(const Tensor<ComponentType> &other) =
+    default;
 
 // Move-assignment
-template< Arithmetic ComponentType >
-Tensor< ComponentType >& Tensor< ComponentType >::operator=(Tensor< ComponentType >&& other) noexcept
+template <Arithmetic ComponentType>
+Tensor<ComponentType> &Tensor<ComponentType>::operator=(Tensor<ComponentType> &&other) noexcept
 
 {
-    shape_ = std::exchange(other.shape_, std::vector< size_t >());
+    shape_ = std::exchange(other.shape_, std::vector<size_t>());
     data_ = std::exchange(other.data_, {0});
     return *this;
 }
 
-template< Arithmetic ComponentType >
-size_t
-Tensor< ComponentType >::rank() const
+template <Arithmetic ComponentType> size_t Tensor<ComponentType>::rank() const
 {
     return shape_.size();
 }
 
-template< Arithmetic ComponentType >
-std::vector< size_t >
-Tensor< ComponentType >::shape() const
+template <Arithmetic ComponentType> std::vector<size_t> Tensor<ComponentType>::shape() const
 {
     return shape_;
 }
 
-template< Arithmetic ComponentType >
-size_t
-Tensor< ComponentType >::numElements() const
+template <Arithmetic ComponentType> size_t Tensor<ComponentType>::numElements() const
 {
     return numTensorElements(shape_);
 }
 
-template< Arithmetic ComponentType >
-const ComponentType&
-Tensor< ComponentType >::operator()(const std::vector< size_t >& idx) const
+template <Arithmetic ComponentType>
+const ComponentType &Tensor<ComponentType>::operator()(const std::vector<size_t> &idx) const
 {
     assert(idx.size() == rank());
     return data_[flatIdx(shape_, idx)];
 }
 
-template< Arithmetic ComponentType >
-ComponentType&
-Tensor< ComponentType >::operator()(const std::vector< size_t >& idx)
+template <Arithmetic ComponentType>
+ComponentType &Tensor<ComponentType>::operator()(const std::vector<size_t> &idx)
 {
     assert(idx.size() == rank());
     return data_[flatIdx(shape_, idx)];
 }
 
-template< Arithmetic ComponentType >
-ComponentType&
-Tensor< ComponentType >::operator()(const size_t& idx)
+template <Arithmetic ComponentType>
+ComponentType &Tensor<ComponentType>::operator()(const size_t &idx)
 {
     assert(data_.size() > idx);
     return data_[idx];
 }
 
-
-
 // Returns true if the shapes and all elements of both tensors are equal.
-template< Arithmetic ComponentType >
-bool operator==(const Tensor< ComponentType >& a, const Tensor< ComponentType >& b)
+template <Arithmetic ComponentType>
+bool operator==(const Tensor<ComponentType> &a, const Tensor<ComponentType> &b)
 {
 
     if (a.shape() != b.shape())
@@ -232,21 +207,21 @@ bool operator==(const Tensor< ComponentType >& a, const Tensor< ComponentType >&
     }
 
     size_t rank = a.rank();
-    std::vector< size_t > shape = a.shape();
+    std::vector<size_t> shape = a.shape();
     size_t numElements = a.numElements();
 
     bool equal = true;
 
     if (rank == 0)
     {
-        std::vector< size_t > idx(0);
+        std::vector<size_t> idx(0);
         return a(idx) == b(idx);
     }
     else if (rank == 1)
     {
         for (size_t i = 0; i < shape[0]; i++)
         {
-            std::vector< size_t > idx(1);
+            std::vector<size_t> idx(1);
             idx[0] = i;
             equal &= a(idx) == b(idx);
         }
@@ -254,7 +229,7 @@ bool operator==(const Tensor< ComponentType >& a, const Tensor< ComponentType >&
     else
     {
         size_t cnt = 0;
-        std::vector< size_t > idx(rank, 0);
+        std::vector<size_t> idx(rank, 0);
 
         while (cnt < numElements)
         {
@@ -283,15 +258,15 @@ bool operator==(const Tensor< ComponentType >& a, const Tensor< ComponentType >&
 }
 
 // Pretty-prints the tensor to stdout.
-// This is not necessary (and not covered by the tests) but nice to have, also for debugging (and for exercise of course...).
-template< Arithmetic ComponentType >
-std::ostream&
-operator<<(std::ostream& out, const Tensor< ComponentType >& tensor)
+// This is not necessary (and not covered by the tests) but nice to have, also for debugging (and
+// for exercise of course...).
+template <Arithmetic ComponentType>
+std::ostream &operator<<(std::ostream &out, const Tensor<ComponentType> &tensor)
 {
 
     if (tensor.rank() == 0)
     {
-        std::vector< size_t > idx(0);
+        std::vector<size_t> idx(0);
         out << "() [" << tensor(idx) << "]\n";
     }
     else if (tensor.rank() == 1)
@@ -299,18 +274,18 @@ operator<<(std::ostream& out, const Tensor< ComponentType >& tensor)
         out << "(:) [";
         for (size_t i = 0; i < tensor.shape()[0] - 1; i++)
         {
-            std::vector< size_t > idx(1);
+            std::vector<size_t> idx(1);
             idx[0] = i;
             out << tensor(idx) << " ";
         }
-        std::vector< size_t > idx(1);
+        std::vector<size_t> idx(1);
         idx[0] = tensor.shape()[0] - 1;
         out << tensor(idx) << "]\n";
     }
     else
     {
         size_t cnt = 0;
-        std::vector< size_t > idx(tensor.rank(), 0);
+        std::vector<size_t> idx(tensor.rank(), 0);
 
         while (cnt < tensor.numElements())
         {
@@ -346,8 +321,8 @@ operator<<(std::ostream& out, const Tensor< ComponentType >& tensor)
 }
 
 // Reads a tensor from file.
-template< Arithmetic ComponentType >
-Tensor< ComponentType > readTensorFromFile(const std::string& filename)
+template <Arithmetic ComponentType>
+Tensor<ComponentType> readTensorFromFile(const std::string &filename)
 {
 
     std::ifstream file;
@@ -362,30 +337,30 @@ Tensor< ComponentType > readTensorFromFile(const std::string& filename)
     std::string line;
     std::getline(file, line);
 
-    auto rank = stringToScalar< size_t >(line);
+    auto rank = stringToScalar<size_t>(line);
 
-    std::vector< size_t > shape(rank);
+    std::vector<size_t> shape(rank);
     for (size_t i = 0; i < rank; i++)
     {
         std::getline(file, line);
-        shape[i] = stringToScalar< size_t >(line);
+        shape[i] = stringToScalar<size_t>(line);
     }
 
-    Tensor< ComponentType > tensor(shape);
+    Tensor<ComponentType> tensor(shape);
 
     if (rank == 0)
     {
         std::getline(file, line);
-        tensor(shape) = stringToScalar< ComponentType >(line);
+        tensor(shape) = stringToScalar<ComponentType>(line);
     }
     else
     {
-        std::vector< size_t > idx(shape.size(), 0);
+        std::vector<size_t> idx(shape.size(), 0);
         size_t cnt = 0;
         while (cnt < tensor.numElements())
         {
             std::getline(file, line);
-            tensor(idx) = stringToScalar< ComponentType >(line);
+            tensor(idx) = stringToScalar<ComponentType>(line);
 
             idx[rank - 1]++;
             for (size_t i = rank - 1; i > 0; i--)
@@ -406,8 +381,8 @@ Tensor< ComponentType > readTensorFromFile(const std::string& filename)
 }
 
 // Writes a tensor to file.
-template< Arithmetic ComponentType >
-void writeTensorToFile(const Tensor< ComponentType >& tensor, const std::string& filename)
+template <Arithmetic ComponentType>
+void writeTensorToFile(const Tensor<ComponentType> &tensor, const std::string &filename)
 {
 
     std::ofstream file;
@@ -425,7 +400,7 @@ void writeTensorToFile(const Tensor< ComponentType >& tensor, const std::string&
     }
     else
     {
-        std::vector< size_t > idx(tensor.shape().size(), 0);
+        std::vector<size_t> idx(tensor.shape().size(), 0);
         size_t cnt = 0;
         while (cnt < tensor.numElements())
         {
