@@ -11,8 +11,8 @@ class FullyConnected : BaseLayer
 {
 public:
     FullyConnected(std::size_t input_size, std::size_t output_size, std::mt19937 &generator);
-    Tensor<double> forward(const Matrix<double> &input_tensor) override;
-    Tensor<double> backward(const Matrix<double> &error_tensor) override;
+    Matrix<double> forward(const Matrix<double> &input_tensor) override;
+    Matrix<double> backward(const Matrix<double> &error_tensor) override;
     void set_optimizer(std::unique_ptr<Optimizer> opt) override;
     ~FullyConnected() override;
 

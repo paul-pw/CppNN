@@ -94,7 +94,7 @@ template <typename ComponentType> Vector<ComponentType>::Vector(const std::strin
 template <typename ComponentType>
 Vector<ComponentType>::Vector(Tensor<ComponentType> &&tensor) : tensor_(std::move(tensor))
 {
-    assert(tensor.rank() == 1);
+    assert(tensor_.rank() == 1);
 }
 
 template <typename ComponentType> size_t Vector<ComponentType>::size() const
@@ -128,7 +128,7 @@ Matrix<ComponentType>::Matrix(size_t rows, size_t cols) : tensor_({rows, cols})
 template <typename ComponentType>
 Matrix<ComponentType>::Matrix(Tensor<ComponentType> &&tensor) : tensor_(std::move(tensor))
 {
-    assert(tensor.rank() == 2);
+    assert(tensor_.rank() == 2);
 }
 
 template <typename ComponentType>

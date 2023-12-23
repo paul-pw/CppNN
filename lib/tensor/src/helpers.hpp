@@ -55,3 +55,38 @@ template <typename T> Matrix<T> dot(const Matrix<T> &a, const Matrix<T> &b)
     }
     return out;
 }
+
+enum class Axis
+{
+    row = 0,
+    col,
+};
+
+// add colls
+template <typename T> void add(Matrix<T> &m, const Vector<T> &v, Axis axis)
+{
+    if (axis == Axis::col)
+    {
+        assert(m.cols() == v.size());
+    }
+    else
+    {
+        assert(m.rows() == v.size());
+    }
+
+    for (size_t i = 0; i < m.rows(); ++i)
+    {
+        for (size_t j = 0; j < m.cols(); ++j)
+        {
+            switch (axis)
+            {
+            case Axis::col:
+                m(i, j) += v(j);
+                break;
+            case Axis::row:
+                m(i, j) += v(i);
+                break;
+            }
+        }
+    }
+}

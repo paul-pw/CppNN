@@ -37,9 +37,25 @@ TEST(helpers, dot)
     a(1, 1) = 5;
     b(1, 2) = 4;
     auto c = dot(a, b);
-    std::cout << a.tensor() << '\n' << b.tensor() << '\n' << c.tensor();
+    //std::cout << a.tensor() << '\n' << b.tensor() << '\n' << c.tensor();
     EXPECT_EQ(c(0, 0), 18);
     EXPECT_EQ(c(0, 2), 20);
     EXPECT_EQ(c(1, 0), 27);
     EXPECT_EQ(c(1, 2), 32);
+}
+
+TEST(helpers, add){
+    Matrix<int> d{2,3,1};
+    Matrix<int> e{2,3,1};
+    Vector<int> b{2,1};
+    b(1) = 2;
+    Vector<int> c{3,2};
+    c(1) = 3;
+    add(d,b, Axis::row);
+    add(e,c, Axis::col);
+    //std::cout << c.tensor() <<'\n' <<e.tensor();
+    EXPECT_EQ(d(0,0), 2);
+    EXPECT_EQ(d(1,0), 3);
+    EXPECT_EQ(e(0,0), 3);
+    EXPECT_EQ(e(0,1), 4);
 }
