@@ -1,4 +1,5 @@
 #pragma once
+#include <cassert>
 #include <cstddef>
 #include <functional>
 #include <numeric>
@@ -19,6 +20,7 @@ Tensor<T> random_tensor(const std::vector< size_t >& shape, T low, T high, Gener
     return tensor;
 }
 
+// TODO performance optimizaton: implement transpose_and_dot
 template <typename T>
 Matrix<T> transpose(const Matrix<T>& tensor){
     Matrix<T> out{tensor.cols(), tensor.rows()};
@@ -32,10 +34,16 @@ Matrix<T> transpose(const Matrix<T>& tensor){
 
 template <typename T>
 Matrix<T> dot(const Matrix<T>& a, const Matrix<T>& b){
+    assert(a.cols() == b.rows());
+    
     Matrix<T> out{a.rows(), b.cols()};
-    for(size_t i=0;i<a.rows(); ++i){
-        for(size_t j=0; j<b.rows(); ++i){
 
+    for(size_t i=0;i<a.rows(); ++i){
+        for(size_t j=0; j<b.cols(); ++j){
+            for(size_t k=0; k<b.rows(); ++k){
+                out(i, j) += a(i, k) * b(k,j);
+            }
         }
     }
+    return out;
 }
