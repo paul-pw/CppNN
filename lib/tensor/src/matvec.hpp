@@ -6,7 +6,7 @@ template <typename ComponentType> class Vector
 {
 public:
     // Default-constructor.
-    Vector() = default;
+    Vector();
 
     // Constructor for vector of certain size.
     explicit Vector(size_t size);
@@ -39,7 +39,7 @@ template <typename ComponentType> class Matrix
 {
 public:
     // Default-constructor.
-    Matrix() = default;
+    Matrix();
 
     // Constructor for matrix of certain size.
     explicit Matrix(size_t rows, size_t cols);
@@ -71,6 +71,10 @@ public:
 private:
     Tensor<ComponentType> tensor_;
 };
+
+template <typename ComponentType> Vector<ComponentType>::Vector() : tensor_({0})
+{
+}
 
 template <typename ComponentType> Vector<ComponentType>::Vector(size_t size) : tensor_({size})
 {
@@ -120,6 +124,9 @@ template <typename ComponentType> Tensor<ComponentType> &Vector<ComponentType>::
     return tensor_;
 }
 
+template <typename ComponentType> Matrix<ComponentType>::Matrix() : tensor_({0, 0})
+{
+}
 template <typename ComponentType>
 Matrix<ComponentType>::Matrix(size_t rows, size_t cols) : tensor_({rows, cols})
 {

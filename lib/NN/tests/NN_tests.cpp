@@ -23,3 +23,19 @@ TEST(FullyConnected, forwardShape){
     EXPECT_EQ(out.cols(), 3);
 
 }
+
+TEST(FullyConnected, backwardShape)
+{
+    std::mt19937 gen(42);
+    Matrix<double> m{5, 12, 2};
+    Matrix<double> e{5, 3, 2};
+    FullyConnected l(12, 3, gen);
+    
+    //std::cout<<m.tensor()<<'\n';
+    auto f = l.forward(m);
+    auto out = l.backward(e);
+    //std::cout <<out.tensor();
+
+    EXPECT_EQ(out.rows(), 5);
+    EXPECT_EQ(out.cols(), 12);
+}
