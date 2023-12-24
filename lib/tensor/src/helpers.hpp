@@ -62,7 +62,7 @@ enum class Axis
     col,
 };
 
-// TODO potential optimization: switch rows and cols 
+// TODO potential optimization: switch rows and cols
 // such that locality in underlying vector is best
 // TODO put switch statement outside for for better performance?
 // add colls
@@ -102,13 +102,15 @@ template <typename T> Vector<T> sum_axis(const Matrix<T> &m, Axis axis)
     Vector<T> out{vec_size};
     for (size_t i = 0; i < m.rows(); ++i)
     {
-        for(size_t j=0; j<m.cols(); ++j){
-            switch (axis) {
+        for (size_t j = 0; j < m.cols(); ++j)
+        {
+            switch (axis)
+            {
             case Axis::row:
-                out(i) += m(i,j);
+                out(i) += m(i, j);
                 break;
             case Axis::col:
-                out(j) += m(i,j);
+                out(j) += m(i, j);
                 break;
             }
         }

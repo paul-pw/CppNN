@@ -1,11 +1,15 @@
 #pragma once
+#include <memory>
+
+#include "matvec.hpp"
 #include "tensor.hpp"
 
 class Optimizer
 {
 public:
     Optimizer() = default;
-    Optimizer(Optimizer &other) = default;
-    virtual Tensor<double> calculate_update(Tensor<double> weight_tensor,
-                                            Tensor<double> gradient_tensor) = 0;
+    virtual void update(Matrix<double>& weight_tensor, const Matrix<double>& gradient_tensor) = 0;
+    virtual void update(Vector<double>& bias_tensor, const Vector<double>& gradient_tensor) = 0;
+    virtual std::unique_ptr<Optimizer> clone() = 0;
+    virtual ~Optimizer() = default;
 };

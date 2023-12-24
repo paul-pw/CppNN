@@ -12,9 +12,10 @@ FullyConnected::FullyConnected(std::size_t input_size, std::size_t output_size,
 {
 }
 
-void FullyConnected::set_optimizer(std::unique_ptr<Optimizer> opt)
+void FullyConnected::set_optimizer(const std::unique_ptr<Optimizer> &opt)
 {
-    m_optimizer = std::move(opt);
+    m_weight_optimizer = opt->clone();
+    m_bias_optimizer = opt->clone();
 }
 
 Matrix<double> FullyConnected::forward(const Matrix<double> &input_tensor)
@@ -27,9 +28,17 @@ Matrix<double> FullyConnected::forward(const Matrix<double> &input_tensor)
 
 Matrix<double> FullyConnected::backward(const Matrix<double> &error_tensor)
 {
+    // calculate gradient update
     auto input_tensor_T = transpose(m_input_tensor);
     auto gradient_weights = dot(input_tensor_T, error_tensor);
-    //auto gradient_bias = dot(ones, error_tensor);
-}
+    auto gradient_bias = sum_axis(error_tensor, Axis::col);
+    if (m_weight_optimizer != nullptr && m_bias_optimizer != nullptr)
+    {
+        m_weight_optimizer->update(m_weights, gradient_weights);
+        m_bias_optimizer->update(m_bias, gradient_bias);
+    }
 
-FullyConnected::~FullyConnected(){};
+    // calculate error tensor
+    auto weights_T = transpose(m_weights);
+    return dot(error_tensor, weights_T);
+}
