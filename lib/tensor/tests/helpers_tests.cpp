@@ -59,3 +59,18 @@ TEST(helpers, add){
     EXPECT_EQ(e(0,0), 3);
     EXPECT_EQ(e(0,1), 4);
 }
+
+TEST(helpers, sumAxis){
+    Matrix<int> m{2,3,2};
+    m(1,1) = 1;
+    auto a = sum_axis(m, Axis::col);
+    auto b = sum_axis(m, Axis::row);
+    //std::cout << m.tensor()<<'\n'<<a.tensor() << '\n' << b.tensor();
+    EXPECT_EQ(a.size(), 3);
+    EXPECT_EQ(a(0), 4);
+    EXPECT_EQ(a(1), 3);
+    EXPECT_EQ(b.size(), 2);
+    EXPECT_EQ(b(0), 6);
+    EXPECT_EQ(b(1), 5);
+}
+

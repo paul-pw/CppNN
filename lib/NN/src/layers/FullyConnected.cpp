@@ -27,6 +27,9 @@ Matrix<double> FullyConnected::forward(const Matrix<double> &input_tensor)
 
 Matrix<double> FullyConnected::backward(const Matrix<double> &error_tensor)
 {
+    auto input_tensor_T = transpose(m_input_tensor);
+    auto gradient_weights = dot(input_tensor_T, error_tensor);
+    //auto gradient_bias = dot(ones, error_tensor);
 }
 
 FullyConnected::~FullyConnected(){};
