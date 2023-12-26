@@ -5,7 +5,8 @@
 #include <matvec.hpp>
 #include <helpers.hpp>
 #include <random>
-
+#include <optimizers/CrossEntropyLoss.hpp>
+#include <optimizers/Sgd.hpp>
 
 TEST(TestSuit, TestName)
 {
@@ -86,4 +87,37 @@ TEST(SoftMax, softmax){
     EXPECT_EQ(b(0,0), 0);
     EXPECT_EQ(b(1,1), -0.20998717080701304);
     EXPECT_EQ(b(1,0), 0.20998717080701307);
+}
+
+TEST(CrossEntropy, CrossEntropy){
+    Matrix<double> m{2,2};
+    m(0,0) = 0.4;
+    m(0,1) = 0.6;
+    m(1,0) = 0.9;
+    m(1,1) = 0.1;
+    Matrix<double> l{2,2,1.0};
+    l(0,1) = 0.0;
+    l(1,1) = 0.0;
+    CrossEntropyLoss ce{};
+    auto loss = ce.forward(m,l);
+    //std::cout<<loss;
+    EXPECT_DOUBLE_EQ(loss, 1.0216512475319806);
+    auto err = ce.backward(l);
+    //std::cout <<err.tensor();
+    EXPECT_DOUBLE_EQ(err(0,0),-2.5);
+    EXPECT_DOUBLE_EQ(err(0,1),0);
+    EXPECT_DOUBLE_EQ(err(1,0),-1.1111111111111107);
+    EXPECT_DOUBLE_EQ(err(1,1),0);
+}
+
+TEST(Sgd, Sgd){
+    Matrix<double> m{2,2,3.0};
+    Matrix<double> g{2,2,0.4};
+    Vector<double> v{2,2.0};
+    Vector<double> gv{2,-0.6};
+    Sgd sgd{0.01};
+    sgd.update(m,g);
+    sgd.update(v,gv);
+    EXPECT_DOUBLE_EQ(m(0,0), 2.996);
+    EXPECT_DOUBLE_EQ(v(0), 2.006);
 }

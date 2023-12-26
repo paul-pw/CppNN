@@ -5,9 +5,8 @@
 #include "../optimizers/Optimizer.hpp"
 #include "BaseLayer.hpp"
 #include "matvec.hpp"
-#include "tensor.hpp"
 
-class FullyConnected : BaseLayer
+class FullyConnected : public BaseLayer
 {
 public:
     FullyConnected(std::size_t input_size, std::size_t output_size, std::mt19937 &generator);

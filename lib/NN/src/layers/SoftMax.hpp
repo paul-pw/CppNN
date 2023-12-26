@@ -3,7 +3,7 @@
 #include "layers/BaseLayer.hpp"
 #include "matvec.hpp"
 
-class SoftMax : BaseLayer
+class SoftMax : public BaseLayer
 {
 public:
     SoftMax() = default;

@@ -3,7 +3,7 @@
 #include "layers/BaseLayer.hpp"
 #include "matvec.hpp"
 
-class ReLU : BaseLayer
+class ReLU : public BaseLayer
 {
 public:
     ReLU() = default;
