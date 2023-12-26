@@ -74,3 +74,13 @@ TEST(helpers, sumAxis){
     EXPECT_EQ(b(1), 5);
 }
 
+TEST(helpers, map){
+    Matrix<int> m1{2,3,2};
+    Matrix<int> m2{2,3,3};
+    auto o1 = map(m1, [](auto i){return i*2;});
+    auto o2 = map(m1, m2, [](auto a, auto b){return a*b;});
+    EXPECT_EQ(o1.rows(), 2);
+    EXPECT_EQ(o2.rows(), 2);
+    EXPECT_EQ(o1(0,0), 4);
+    EXPECT_EQ(o2(0,0), 6);
+}
