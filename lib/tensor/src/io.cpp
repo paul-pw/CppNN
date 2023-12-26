@@ -17,7 +17,7 @@ int readInt32BE(std::ifstream &file) {
 
 // Function to read MNIST label data
 Tensor<double> readidx3(std::filesystem::path path, size_t image_index) {
-    printf("Test1\n");
+
     // Open the MNIST image file
     std::ifstream file(path, std::ios::binary);
     if (!file.is_open()) {
