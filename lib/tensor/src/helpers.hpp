@@ -5,6 +5,7 @@
 #include <numeric>
 #include <random>
 #include <tensor.hpp>
+#include <type_traits>
 #include <vector>
 
 #include "matvec.hpp"
@@ -113,6 +114,36 @@ template <typename T> Vector<T> sum_axis(const Matrix<T> &m, Axis axis)
                 out(j) += m(i, j);
                 break;
             }
+        }
+    }
+    return out;
+}
+
+
+template <typename T,typename F> Matrix<T> map(const Matrix<T> &m, F func)
+{
+    Matrix<T> out{m.rows(), m.cols()};
+    std::cout << out.rows()<< '\n';
+    for (size_t i = 0; i < m.rows(); ++i)
+    {
+        for (size_t j = 0; j < m.cols(); ++j)
+        {
+            out(i, j) =  func(m(i, j));
+        }
+    }
+    return out;
+}
+
+template <typename T, typename F> Matrix<T> map(const Matrix<T> &m1,const Matrix<T> &m2, F func)
+{
+    assert(m1.rows() == m2.rows());
+    assert(m1.cols() == m2.cols());
+    Matrix<T> out{m1.rows(), m1.cols()};
+    for (size_t i = 0; i < m1.rows(); ++i)
+    {
+        for (size_t j = 0; j < m1.cols(); ++j)
+        {
+            out(i, j) = func(m1(i, j), m2(i,j));
         }
     }
     return out;
