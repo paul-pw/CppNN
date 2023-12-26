@@ -1,7 +1,7 @@
 #include <iostream>
 #include <filesystem>
 #include "tensor.hpp"
-#include "io.cpp"
+#include <io.hpp>
 
 // Funktion zum Lesen der Magic Number
 int readMagicNumber(const std::string& path) {

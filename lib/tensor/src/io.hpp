@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <tensor.hpp>
 
-// TODO(Kirill) something like this
-Tensor<double> readidx3(std::filesystem::path path);
-Tensor<double> readidx1(std::filesystem::path path);
+int readInt32BE(std::ifstream &file);
+
+Tensor<double> readidx3(std::filesystem::path path, size_t image_index);
+Tensor<double> readidx1(std::filesystem::path path, size_t label_index);
