@@ -31,7 +31,7 @@ Matrix<double> FullyConnected::backward(const Matrix<double> &error_tensor)
     // calculate gradient update
     auto input_tensor_T = transpose(m_input_tensor);
     auto gradient_weights = dot(input_tensor_T, error_tensor);
-    auto gradient_bias = sum_axis(error_tensor, Axis::col);
+    auto gradient_bias = sum_axis(error_tensor, Axis::col); // TODO possibly wrong, use Axis::row
     if (m_weight_optimizer != nullptr && m_bias_optimizer != nullptr)
     {
         m_weight_optimizer->update(m_weights, gradient_weights);

@@ -123,7 +123,6 @@ template <typename T> Vector<T> sum_axis(const Matrix<T> &m, Axis axis)
 template <typename T,typename F> Matrix<T> map(const Matrix<T> &m, F func)
 {
     Matrix<T> out{m.rows(), m.cols()};
-    std::cout << out.rows()<< '\n';
     for (size_t i = 0; i < m.rows(); ++i)
     {
         for (size_t j = 0; j < m.cols(); ++j)
