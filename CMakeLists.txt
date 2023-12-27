@@ -6,6 +6,8 @@ project(project_mnist VERSION 1.0
 
 set(CXX_STANDARD 20)
 
+#find_package(OpenMP)
+
 ######## GTEST
 
 # for Gtest from https://google.github.io/googletest/quickstart-cmake.html

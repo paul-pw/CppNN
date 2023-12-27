@@ -24,7 +24,6 @@ Tensor<T> random_tensor(const std::vector<size_t> &shape, T low, T high, Generat
     return tensor;
 }
 
-// TODO performance optimizaton: implement transpose_and_dot
 template <typename T> Matrix<T> transpose(const Matrix<T> &tensor)
 {
     Matrix<T> out{tensor.cols(), tensor.rows()};

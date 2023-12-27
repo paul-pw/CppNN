@@ -151,7 +151,7 @@ TEST(NN, NnTrains)
     NN network{std::move(layers), std::make_unique<Sgd>(1e-2)};
 
     double loss = std::numeric_limits<double>::max();
-    for (size_t i = 0; i < 100; ++i)
+    for (size_t i = 0; i < 400; ++i)
     {
         loss = network.train(input, labels);
         //std::cout << loss<<'\n';
