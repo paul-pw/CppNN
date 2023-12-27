@@ -110,13 +110,13 @@ template <typename ComponentType> size_t Vector<ComponentType>::size() const
 template <typename ComponentType>
 const ComponentType &Vector<ComponentType>::operator()(size_t idx) const
 {
-    return tensor_({idx});
+    return tensor_(idx);
 }
 
 // Element mutation function
 template <typename ComponentType> ComponentType &Vector<ComponentType>::operator()(size_t idx)
 {
-    return tensor_({idx});
+    return tensor_(idx);
 }
 
 template <typename ComponentType> Tensor<ComponentType> &Vector<ComponentType>::tensor()
@@ -167,14 +167,14 @@ template <typename ComponentType> size_t Matrix<ComponentType>::cols() const
 template <typename ComponentType>
 const ComponentType &Matrix<ComponentType>::operator()(size_t row, size_t col) const
 {
-    return tensor_({row, col});
+    return tensor_(row, col);
 }
 
 // Element mutation function
 template <typename ComponentType>
 ComponentType &Matrix<ComponentType>::operator()(size_t row, size_t col)
 {
-    return tensor_({row, col});
+    return tensor_(row, col);
 }
 
 template <typename ComponentType> Tensor<ComponentType> &Matrix<ComponentType>::tensor()

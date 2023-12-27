@@ -117,6 +117,16 @@ public:
     // Element mutation function
     ComponentType &operator()(const size_t &idx);
 
+    // Element mutation function
+    const ComponentType &operator()(const size_t &idx) const;
+
+    // Element mutation function
+    ComponentType &operator()(const size_t &a, const size_t&b);
+    
+    // Element mutation function
+    const ComponentType &operator()(const size_t &a, const size_t&b) const;
+
+
 private:
     std::vector<size_t> shape_;
     std::vector<ComponentType> data_;
@@ -208,6 +218,28 @@ ComponentType &Tensor<ComponentType>::operator()(const size_t &idx)
     assert(data_.size() > idx);
     return data_[idx];
 }
+
+template <Arithmetic ComponentType>
+const ComponentType &Tensor<ComponentType>::operator()(const size_t &idx) const
+{
+    assert(data_.size() > idx);
+    return data_[idx];
+}
+
+template <Arithmetic ComponentType>
+ComponentType &Tensor<ComponentType>::operator()(const size_t &a, const size_t&b)
+{
+    assert(rank() == 2);
+    return data_[a * shape_[1] + b];
+}
+
+template <Arithmetic ComponentType>
+const ComponentType &Tensor<ComponentType>::operator()(const size_t &a, const size_t&b) const
+{
+    assert(rank() == 2);
+    return data_[a * shape_[1] + b];
+}
+
 
 // Returns true if the shapes and all elements of both tensors are equal.
 template <Arithmetic ComponentType>

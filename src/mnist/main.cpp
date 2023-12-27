@@ -27,7 +27,7 @@ int main()
     auto training_images = readidx3_batches("./mnist-datasets/train-images.idx3-ubyte", 100);
     auto training_labels = readidx1_batches("./mnist-datasets/train-labels.idx1-ubyte", 100);
 
-    auto epochs = 5;
+    auto epochs = 100;
     std::cout << "training_model for " << epochs << " epochs\n";
     for (size_t i = 0; i < epochs; ++i)
     {
