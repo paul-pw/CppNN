@@ -27,6 +27,8 @@ Tensor<T> random_tensor(const std::vector<size_t> &shape, T low, T high, Generat
 template <typename T> Matrix<T> transpose(const Matrix<T> &tensor)
 {
     Matrix<T> out{tensor.cols(), tensor.rows()};
+
+    #pragma omp parallel for
     for (size_t i = 0; i < tensor.rows(); ++i)
     {
         for (size_t j = 0; j < tensor.cols(); ++j)
@@ -43,6 +45,7 @@ template <typename T> Matrix<T> dot(const Matrix<T> &a, const Matrix<T> &b)
 
     Matrix<T> out{a.rows(), b.cols()};
 
+    #pragma omp parallel for
     for (size_t i = 0; i < a.rows(); ++i)
     {
         for (size_t j = 0; j < b.cols(); ++j)
@@ -77,6 +80,7 @@ template <typename T> void add(Matrix<T> &m, const Vector<T> &v, Axis axis)
         assert(m.rows() == v.size());
     }
 
+    #pragma omp parallel for
     for (size_t i = 0; i < m.rows(); ++i)
     {
         for (size_t j = 0; j < m.cols(); ++j)
@@ -100,6 +104,8 @@ template <typename T> Vector<T> sum_axis(const Matrix<T> &m, Axis axis)
     // vec_size depending on Axis
     auto vec_size = (axis == Axis::row) ? m.rows() : m.cols();
     Vector<T> out{vec_size};
+
+    #pragma omp parallel for
     for (size_t i = 0; i < m.rows(); ++i)
     {
         for (size_t j = 0; j < m.cols(); ++j)
@@ -121,6 +127,8 @@ template <typename T> Vector<T> sum_axis(const Matrix<T> &m, Axis axis)
 template <typename T, typename F> Matrix<T> map(const Matrix<T> &m, F func)
 {
     Matrix<T> out{m.rows(), m.cols()};
+
+    #pragma omp parallel for
     for (size_t i = 0; i < m.rows(); ++i)
     {
         for (size_t j = 0; j < m.cols(); ++j)
@@ -136,6 +144,8 @@ template <typename T, typename F> Matrix<T> map(const Matrix<T> &m1, const Matri
     assert(m1.rows() == m2.rows());
     assert(m1.cols() == m2.cols());
     Matrix<T> out{m1.rows(), m1.cols()};
+
+    #pragma omp parallel for
     for (size_t i = 0; i < m1.rows(); ++i)
     {
         for (size_t j = 0; j < m1.cols(); ++j)

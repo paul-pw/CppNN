@@ -8,6 +8,7 @@
 #include <matvec.hpp>
 #include <optimizers/Sgd.hpp>
 #include <random>
+#include <chrono>
 
 #include "io.hpp"
 
@@ -37,8 +38,13 @@ int main()
         Matrix<double> input{std::move(images)};
         auto labels = training_labels[i % training_labels.size()];
         Matrix<double> labels_input{std::move(labels)};
-
+        
+        auto start = std::chrono::high_resolution_clock::now();
         auto loss = network.train(input, labels_input);
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = duration_cast<std::chrono::milliseconds>(stop - start); 
+        std::cout <<"duration: "<< duration.count() <<"ms\n";
+        
         std::cout << "epoch: " << i << " loss: " << loss << '\n';
     }
 
@@ -58,6 +64,7 @@ int main()
 
         std::cout << "Prediction batch:" << i << '\n';
         auto predicted = network.predict(input);
+        double accurary = 0.0;
         for (std::size_t j = 0; j < predicted.rows(); ++j)
         {
             double predicted_max = 0;
@@ -81,6 +88,10 @@ int main()
 
             std::cout << " - predicted: " << predicted_max_index << "\tactual: " << label_max_index
                       << '\n';
+            if(predicted_max_index == label_max_index){
+                accurary += 1.0/100; // Batch Size
+            }
         }
+        std::cout << "accuracy: "<<accurary <<'\n';
     }
 }

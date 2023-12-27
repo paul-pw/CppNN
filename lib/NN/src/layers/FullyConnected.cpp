@@ -24,7 +24,8 @@ Tensor<double> xavier_initializer(const std::vector<size_t> &shape, double fan_i
 FullyConnected::FullyConnected(std::size_t input_size, std::size_t output_size,
                                std::mt19937 &generator)
     : m_weights{xavier_initializer({input_size, output_size}, input_size, output_size, generator)},
-      m_bias{xavier_initializer({output_size},input_size , output_size, generator)}
+    m_bias{xavier_initializer({output_size},input_size , output_size, generator)} 
+
 {
 }
 

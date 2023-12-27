@@ -6,7 +6,7 @@ project(project_mnist VERSION 1.0
 
 set(CXX_STANDARD 20)
 
-#find_package(OpenMP)
+find_package(OpenMP)
 
 ######## GTEST
 

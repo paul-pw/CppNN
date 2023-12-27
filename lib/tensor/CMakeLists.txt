@@ -2,7 +2,7 @@ file(GLOB_RECURSE lib_src src/*)
 add_library(tensor STATIC ${lib_src})
 target_include_directories(tensor PUBLIC src/)
 target_compile_features(tensor PUBLIC cxx_std_20 )
-#target_link_libraries(tensor PUBLIC OpenMP::OpenMP_CXX)
+target_link_libraries(tensor PUBLIC OpenMP::OpenMP_CXX)
 
 file(GLOB_RECURSE test_src tests/*)
 add_executable(tensor_test ${test_src})

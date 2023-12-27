@@ -13,6 +13,8 @@ void Sgd::update(Matrix<double> &weight_tensor, const Matrix<double> &gradient_t
 {
     assert(weight_tensor.rows() == gradient_tensor.rows());
     assert(weight_tensor.cols() == gradient_tensor.cols());
+
+    #pragma omp parallel for
     for (size_t i = 0; i < weight_tensor.rows(); ++i)
     {
         for (size_t j = 0; j < weight_tensor.cols(); ++j)
@@ -25,6 +27,8 @@ void Sgd::update(Matrix<double> &weight_tensor, const Matrix<double> &gradient_t
 void Sgd::update(Vector<double> &bias_tensor, const Vector<double> &gradient_tensor)
 {
     assert(bias_tensor.size() == gradient_tensor.size());
+
+    #pragma omp parallel for
     for (size_t i = 0; i < bias_tensor.size(); ++i)
     {
         bias_tensor(i) -= m_learning_rate * gradient_tensor(i);
