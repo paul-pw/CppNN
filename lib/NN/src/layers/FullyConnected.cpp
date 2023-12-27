@@ -1,14 +1,30 @@
 #include "FullyConnected.hpp"
 
+#include <cmath>
+#include <cstdlib>
 #include <helpers.hpp>
 #include <matvec.hpp>
 #include <memory>
 #include <random>
 
+Tensor<double> xavier_initializer(const std::vector<size_t> &shape, double fan_in, double fan_out,
+                                  std::mt19937 &gen)
+{
+    Tensor<double> tensor{shape};
+    auto size = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<>());
+    std::normal_distribution dis{0.0, std::sqrt(2 / (fan_in + fan_out))};
+    for (size_t i = 0; i < size; ++i)
+    {
+        tensor(i) = dis(gen);
+    }
+    return tensor;
+}
+
+// TODO maybe find a better initializing technique, -1,1 seems to give the best results for now.
 FullyConnected::FullyConnected(std::size_t input_size, std::size_t output_size,
                                std::mt19937 &generator)
-    : m_weights{random_tensor({input_size, output_size}, 0.0, 1.0, generator)},
-      m_bias{random_tensor({output_size}, 0.0, 1.0, generator)}
+    : m_weights{xavier_initializer({input_size, output_size}, input_size, output_size, generator)},
+      m_bias{xavier_initializer({output_size},input_size , output_size, generator)}
 {
 }
 

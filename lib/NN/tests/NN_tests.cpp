@@ -88,12 +88,12 @@ TEST(SoftMax, softmax)
     auto f = softmax.forward(m);
     auto b = softmax.backward(e);
     // std::cout<<f.tensor()<<'\n' <<b.tensor();
-    EXPECT_EQ(f(0, 0), 0.5);
-    EXPECT_EQ(f(1, 1), 0.11920292202211756);
-    EXPECT_EQ(f(1, 0), 0.88079707797788243);
-    EXPECT_EQ(b(0, 0), 0);
-    EXPECT_EQ(b(1, 1), -0.20998717080701304);
-    EXPECT_EQ(b(1, 0), 0.20998717080701307);
+    EXPECT_DOUBLE_EQ(f(0, 0), 0.5);
+    EXPECT_DOUBLE_EQ(f(1, 1), 0.11920292202211756);
+    EXPECT_DOUBLE_EQ(f(1, 0), 0.88079707797788243);
+    EXPECT_DOUBLE_EQ(b(0, 0), 0);
+    EXPECT_DOUBLE_EQ(b(1, 1), -0.20998717080701304);
+    EXPECT_DOUBLE_EQ(b(1, 0), 0.20998717080701323);
 }
 
 TEST(CrossEntropy, CrossEntropy)

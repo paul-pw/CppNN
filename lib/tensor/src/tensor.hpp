@@ -1,9 +1,12 @@
 #pragma once
 
 #include <cassert>
+#include <cstddef>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <memory>
+#include <numeric>
 #include <sstream>
 #include <stdexcept>
 #include <utility>
@@ -100,6 +103,8 @@ public:
     // Returns the shape of the tensor.
     [[nodiscard]] std::vector<size_t> shape() const;
 
+    void reshape(const std::vector<size_t> &size);
+
     // Returns the number of elements of this tensor.
     [[nodiscard]] size_t numElements() const;
 
@@ -168,6 +173,14 @@ template <Arithmetic ComponentType> size_t Tensor<ComponentType>::rank() const
 template <Arithmetic ComponentType> std::vector<size_t> Tensor<ComponentType>::shape() const
 {
     return shape_;
+}
+
+template <Arithmetic ComponentType>
+void Tensor<ComponentType>::reshape(const std::vector<size_t> &shape)
+{
+    assert(std::accumulate(shape.begin(), shape.end(),1, std::multiplies()) ==
+           std::accumulate(shape_.begin(), shape_.end(),1, std::multiplies()));
+    shape_ = shape;
 }
 
 template <Arithmetic ComponentType> size_t Tensor<ComponentType>::numElements() const
