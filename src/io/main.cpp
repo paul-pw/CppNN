@@ -3,41 +3,43 @@
 #include "tensor.hpp"
 #include "io.cpp"
 
+// Funktion zum Lesen der Magic Number
+int readMagicNumber(const std::string& path) {
+    std::ifstream file(path, std::ios::binary);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file " + path);
+    }
+    return readInt32BE(file);
+}
+
 int main(int argc, char* argv[]) {
-     if (argc != 4) {
-        std::cerr << "Usage: " << argv[0] << " <label_input_path> <output_path> <label_index>\n";
+    if (argc != 4) {
+        std::cerr << "Usage: " << argv[0] << " <input_path> <output_path> <index>\n";
         return 1;
     }
 
     std::string input_path = argv[1];
     std::string output_path = argv[2];
-    size_t image_index = std::stoul(argv[3]);
-    //size_t image_index = 0;
-
-   /* std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
-    std::string input_path = "../../mnist-datasets/train-images.idx3-ubyte";
-    std::string output_path = "../../mnist-datasets/image_out.txt";
-    std::string label_path = "../../mnist-datasets/train-labels.idx1-ubyte";
-    std::string label_output_path = "../../mnist-datasets/label_out.txt";
-    size_t image_index = 0;
-    size_t label_index = 0; // Change to read a specific label index*/
+    size_t index = std::stoul(argv[3]);
 
     try {
-        auto tensor = readidx3(input_path, image_index);
+        int magic_number = readMagicNumber(input_path);
+
+        Tensor<double> tensor;
+        if (magic_number == 0x00000803) {
+            tensor = readidx3(input_path, index);
+        } else if (magic_number == 0x00000801) {
+            tensor = readidx1(input_path, index);
+        } else {
+            throw std::runtime_error("Unknown magic number");
+        }
+
         writeTensorToFile(tensor, output_path);
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
         return 1;
     }
 
-   /* try {
-        auto tensor = readidx1(label_path, label_index); // Read label and one-hot encode
-        writeTensorToFile(tensor, label_output_path); // Write the one-hot encoded tensor to file
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << "\n";
-        return 1;
-    }
-
     std::cout << "Done.\n";
-    return 0;*/
+    return 0;
 }
