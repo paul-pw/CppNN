@@ -14,7 +14,7 @@ void Sgd::update(Matrix<double> &weight_tensor, const Matrix<double> &gradient_t
     assert(weight_tensor.rows() == gradient_tensor.rows());
     assert(weight_tensor.cols() == gradient_tensor.cols());
 
-    #pragma omp parallel for
+    #pragma omp parallel for collapse(2)
     for (size_t i = 0; i < weight_tensor.rows(); ++i)
     {
         for (size_t j = 0; j < weight_tensor.cols(); ++j)
