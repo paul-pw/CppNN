@@ -164,6 +164,10 @@ std::vector<Tensor<double>> readidx3_batches(std::filesystem::path path, size_t 
         data.push_back(image);
     }
 
+    if(num_images%batch_size == 0){
+        return data;
+    }
+
     // read last batch
     Tensor<double> image({num_images % batch_size, num_rows, num_columns});
     for (size_t j = 0; j < num_images % batch_size; ++j)
@@ -181,10 +185,6 @@ std::vector<Tensor<double>> readidx3_batches(std::filesystem::path path, size_t 
     }
     data.push_back(image);
 
-    if (!file)
-    {
-        throw std::runtime_error("Error reading file " + path.string());
-    }
 
     return data;
 }
@@ -234,6 +234,10 @@ std::vector<Tensor<double>> readidx1_batches(std::filesystem::path path, size_t 
         data.push_back(one_hot_label);
     }
 
+    if(num_labels%batch_size == 0){
+        return data;
+    }
+
     Tensor<double> one_hot_label({num_labels % batch_size, 10},
                                  0.0); // Initialize all elements to 0.0
     for (size_t j = 0; j < num_labels % batch_size; ++j)
@@ -251,13 +255,6 @@ std::vector<Tensor<double>> readidx1_batches(std::filesystem::path path, size_t 
         }
     }
     data.push_back(one_hot_label);
-
-    // Read the label
-
-    if (!file)
-    {
-        throw std::runtime_error("Error reading file " + path.string());
-    }
 
     return data;
 }
