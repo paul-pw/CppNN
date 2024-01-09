@@ -2,3 +2,4 @@ build
 out
 .nvim
 .cache
+log_*

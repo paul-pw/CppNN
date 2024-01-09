@@ -34,6 +34,16 @@ std::string trim(const std::string &str)
 std::unordered_map<std::string, std::string> parseConfig(const std::filesystem::path &filepath)
 {
     std::unordered_map<std::string, std::string> config;
+
+    // TODO START Remove this part later
+    std::cout << "config Dump\n";
+    std::ifstream f(filepath);
+    if (f.is_open())
+        std::cout << f.rdbuf();
+    std::cout << "config Dump End\n\n";
+    // TODO END remvoe this part later
+
+
     std::ifstream file(filepath);
     if (!file)
     {

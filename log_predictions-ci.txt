@@ -1,4 +1,0 @@
-Current batch: 0
-- image 0: Prediction=5. Label=5
-Current batch: 0
-- image 0: Prediction=5. Label=5
