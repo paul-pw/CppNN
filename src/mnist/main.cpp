@@ -43,7 +43,6 @@ std::unordered_map<std::string, std::string> parseConfig(const std::filesystem::
     std::cout << "config Dump End\n\n";
     // TODO END remvoe this part later
 
-
     std::ifstream file(filepath);
     if (!file)
     {
@@ -73,10 +72,10 @@ std::unordered_map<std::string, std::string> parseConfig(const std::filesystem::
     return config;
 }
 
-
 // Function to log predictions to a file in the specified format
 void logPredictions(const std::filesystem::path &logFilePath,
-                    const std::vector<std::pair<size_t, size_t>> &predictions, size_t batchSize, size_t currentBatch)
+                    const std::vector<std::pair<size_t, size_t>> &predictions, size_t batchSize,
+                    size_t currentBatch)
 {
     std::ofstream logFile(logFilePath,
                           std::ios::app); // Open in append mode to add to existing logs
@@ -87,7 +86,7 @@ void logPredictions(const std::filesystem::path &logFilePath,
     }
 
     // Calculate the current batch number based on the total number of images processed so far
-    size_t totalImagesProcessed = currentBatch*batchSize;
+    size_t totalImagesProcessed = currentBatch * batchSize;
 
     // Log the batch header
     logFile << "Current batch: " << currentBatch << std::endl;
@@ -181,22 +180,26 @@ int main(int argc, char *argv[])
     std::cout << "\ntraining model\n";
     for (size_t i = 0; i < epochs; ++i)
     {
-        // Prepare images and labels for training
-        auto images = training_images[i % training_images.size()];
-        auto s = images.shape();
-        images.reshape({s[0], s[1] * s[2]});
-        Matrix<double> input{std::move(images)};
-        auto labels = training_labels[i % training_labels.size()];
-        Matrix<double> labels_input{std::move(labels)};
+        std::cout << "\n##########\n EPOCH: " << i+1 << "\n##########\n";
+        for(size_t j = 0; j<training_images.size(); ++j){
+            // Prepare images and labels for training
+            auto images = training_images[j];
+            auto labels = training_labels[j];
 
-        // Train model (and time training)
-        auto start = std::chrono::high_resolution_clock::now();
-        auto loss = network.train(input, labels_input);
-        auto stop = std::chrono::high_resolution_clock::now();
-        auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
+            auto s = images.shape();
+            images.reshape({s[0], s[1] * s[2]});
+            Matrix<double> input{std::move(images)};
+            Matrix<double> labels_input{std::move(labels)};
 
-        std::cout << "epoch: " << i << " loss: " << loss << " duration: " << duration.count()
-                  << "ms" << '\n';
+            // Train model (and time training)
+            auto start = std::chrono::high_resolution_clock::now();
+            auto loss = network.train(input, labels_input);
+            auto stop = std::chrono::high_resolution_clock::now();
+            auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
+
+            std::cout << "batch: " << j << " loss: " << loss << " duration: " << duration.count()
+                      << "ms" << '\n';
+        }
     }
 
     // TEST
@@ -247,6 +250,6 @@ int main(int argc, char *argv[])
         cumulated_accurary += accurary;
         std::cout << "Prediction batch:" << i << " accuracy: " << accurary
                   << " cumulated accuracy: " << cumulated_accurary / (1.0 + i) << '\n';
-        logPredictions(rel_path_log_file, predictions, batch_size,i);
+        logPredictions(rel_path_log_file, predictions, batch_size, i);
     }
 }
