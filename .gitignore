@@ -5,3 +5,4 @@ out
 log_*
 gmon.out
 analysis.txt
+*.er

@@ -45,15 +45,18 @@ template <typename T> Matrix<T> dot(const Matrix<T> &a, const Matrix<T> &b)
 
     Matrix<T> out{a.rows(), b.cols()};
 
-    #pragma omp parallel for simd safelen(512) collapse(2)
+    #pragma omp parallel for simd collapse(2)
     for (size_t i = 0; i < a.rows(); ++i)
     {
         for (size_t j = 0; j < b.cols(); ++j)
         {
+            double sum = 0.0;
+#pragma omp simd reduction(+:sum)
             for (size_t k = 0; k < b.rows(); ++k)
             {
-                out(i, j) += a(i, k) * b(k, j);
+                sum += a(i, k) * b(k, j);
             }
+            out(i,j) = sum;
         }
     }
     return out;
