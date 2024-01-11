@@ -3,3 +3,5 @@ out
 .nvim
 .cache
 log_*
+gmon.out
+analysis.txt

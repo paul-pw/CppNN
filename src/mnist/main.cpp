@@ -35,14 +35,6 @@ std::unordered_map<std::string, std::string> parseConfig(const std::filesystem::
 {
     std::unordered_map<std::string, std::string> config;
 
-    // TODO START Remove this part later
-    std::cout << "config Dump\n";
-    std::ifstream f(filepath);
-    if (f.is_open())
-        std::cout << f.rdbuf();
-    std::cout << "config Dump End\n\n";
-    // TODO END remvoe this part later
-
     std::ifstream file(filepath);
     if (!file)
     {
@@ -176,12 +168,19 @@ int main(int argc, char *argv[])
     std::cout << "\nloading data\n";
     auto training_images = readidx3_batches(rel_path_train_images, batch_size);
     auto training_labels = readidx1_batches(rel_path_train_labels, batch_size);
+    auto testing_images = readidx3_batches(rel_path_test_images, batch_size);
+    auto testing_labels = readidx1_batches(rel_path_test_labels, batch_size);
+
+    std::cout << "Data Info:\ntraining_batches: " << training_images.size()
+              << "\ntesting_batches: " << testing_images.size() << "\n\n";
 
     std::cout << "\ntraining model\n";
     for (size_t i = 0; i < epochs; ++i)
     {
-        std::cout << "\n##########\n EPOCH: " << i+1 << "\n##########\n";
-        for(size_t j = 0; j<training_images.size(); ++j){
+        std::cout << "\n##########\n EPOCH: " << i + 1 << "\n##########\n";
+        auto start = std::chrono::high_resolution_clock::now();
+        for (size_t j = 0; j < training_images.size(); ++j)
+        {
             // Prepare images and labels for training
             auto images = training_images[j];
             auto labels = training_labels[j];
@@ -192,21 +191,20 @@ int main(int argc, char *argv[])
             Matrix<double> labels_input{std::move(labels)};
 
             // Train model (and time training)
-            auto start = std::chrono::high_resolution_clock::now();
             auto loss = network.train(input, labels_input);
-            auto stop = std::chrono::high_resolution_clock::now();
-            auto duration = duration_cast<std::chrono::milliseconds>(stop - start);
-
-            std::cout << "batch: " << j << " loss: " << loss << " duration: " << duration.count()
-                      << "ms" << '\n';
+            
+            if(j%100==0){
+                std::cout << "\nbatch: " << j << " loss: " << loss << '\n';
+            }
+            std::cout << "."<<std::flush;
         }
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = duration_cast<std::chrono::seconds>(stop - start);
+        std::cout << "\ntime of last epoch: " << duration.count()<<"s"<<'\n';
+
     }
 
     // TEST
-    std::cout << "\nloading test data\n";
-    auto testing_images = readidx3_batches(rel_path_test_images, batch_size);
-    auto testing_labels = readidx1_batches(rel_path_test_labels, batch_size);
-
     double cumulated_accurary = 0.0;
     for (size_t i = 0; i < testing_images.size(); ++i)
     {

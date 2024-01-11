@@ -67,7 +67,6 @@ Matrix<double> FullyConnected::backward(const Matrix<double> &error_tensor)
         m_weight_optimizer->update(m_weights, gradient_weights);
         m_bias_optimizer->update(m_bias, gradient_bias);
     }
-
     // calculate error tensor
     auto weights_T = transpose(m_weights);
     return dot(error_tensor, weights_T);
