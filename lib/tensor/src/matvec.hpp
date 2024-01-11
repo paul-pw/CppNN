@@ -107,6 +107,7 @@ template <typename ComponentType> size_t Vector<ComponentType>::size() const
 }
 
 // Element access function
+#pragma omp declare simd
 template <typename ComponentType>
 const ComponentType &Vector<ComponentType>::operator()(size_t idx) const
 {
@@ -114,6 +115,7 @@ const ComponentType &Vector<ComponentType>::operator()(size_t idx) const
 }
 
 // Element mutation function
+#pragma omp declare simd
 template <typename ComponentType> ComponentType &Vector<ComponentType>::operator()(size_t idx)
 {
     return tensor_(idx);
@@ -164,6 +166,7 @@ template <typename ComponentType> size_t Matrix<ComponentType>::cols() const
 }
 
 // Element access function
+#pragma omp declare simd
 template <typename ComponentType>
 const ComponentType &Matrix<ComponentType>::operator()(size_t row, size_t col) const
 {
@@ -171,6 +174,7 @@ const ComponentType &Matrix<ComponentType>::operator()(size_t row, size_t col) c
 }
 
 // Element mutation function
+#pragma omp declare simd
 template <typename ComponentType>
 ComponentType &Matrix<ComponentType>::operator()(size_t row, size_t col)
 {

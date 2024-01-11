@@ -212,6 +212,7 @@ ComponentType &Tensor<ComponentType>::operator()(const std::vector<size_t> &idx)
     return data_[flatIdx(shape_, idx)];
 }
 
+#pragma omp declare simd
 template <Arithmetic ComponentType>
 ComponentType &Tensor<ComponentType>::operator()(const size_t &idx)
 {
@@ -219,6 +220,7 @@ ComponentType &Tensor<ComponentType>::operator()(const size_t &idx)
     return data_[idx];
 }
 
+#pragma omp declare simd
 template <Arithmetic ComponentType>
 const ComponentType &Tensor<ComponentType>::operator()(const size_t &idx) const
 {
@@ -226,6 +228,7 @@ const ComponentType &Tensor<ComponentType>::operator()(const size_t &idx) const
     return data_[idx];
 }
 
+#pragma omp declare simd
 template <Arithmetic ComponentType>
 ComponentType &Tensor<ComponentType>::operator()(const size_t &a, const size_t&b)
 {
@@ -233,6 +236,7 @@ ComponentType &Tensor<ComponentType>::operator()(const size_t &a, const size_t&b
     return data_[a * shape_[1] + b];
 }
 
+#pragma omp declare simd
 template <Arithmetic ComponentType>
 const ComponentType &Tensor<ComponentType>::operator()(const size_t &a, const size_t&b) const
 {
