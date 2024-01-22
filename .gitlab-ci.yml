@@ -84,6 +84,30 @@ test_mnist:
     - read_dataset_labels
     - read_dataset_images
 
+over_fitting:
+  stage: test mnist
+  script:
+      - chmod +x mnist.sh
+      - bash mnist.sh mnist-configs/over-fitting-ci.config
+  needs:
+    - job: build
+      artifacts: true
+    - read_dataset_labels
+    - read_dataset_images
+  when: manual
+
+accuracy_test_1:
+  stage: test mnist
+  script:
+      - chmod +x mnist.sh
+      - bash mnist.sh mnist-configs/accuracy-test-1.config
+  needs:
+    - job: build
+      artifacts: true
+    - read_dataset_labels
+    - read_dataset_images
+  when: manual
+
 read_dataset_labels:
   stage: test io
   script:

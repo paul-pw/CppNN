@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
     {
         filepath = filepath / "mnist-configs" / "input.config";
     }
-    std::cout << "v1\n";
+    std::cout << "v2\n";
     std::cout << "Config file path: " << filepath << std::endl;
     // Check if the file exists
     if (!std::filesystem::exists(filepath))
